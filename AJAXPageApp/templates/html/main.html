@@ -1,4 +1,68 @@
 {% extends 'html/base.html' %}
 {% block content %}
-<h1>So far so good.</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">AJAX!</a>
+</nav>
+<div class="container p-4">
+    <form class="ajaxSearch form-inline">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="namefield">Name: </label>
+            <input type="text" class="form-control mb-2 mx-sm-4" id="namefield" name="namefield" placeholder="Your Name!">
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="startdate">Start: </label>
+            <input type="date" class="form-control mb-2 mx-sm-4" id="startdate" name="startdate">
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="enddate">End: </label>
+            <input type="date" class="form-control mb-2 mx-sm-4" id="enddate" name="enddate">
+        </div>
+    </form>
+    <div class="row justify-content-end">
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <a class="page-link" href="#">&laquo;</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">4</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">5</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 {% endblock content %}
