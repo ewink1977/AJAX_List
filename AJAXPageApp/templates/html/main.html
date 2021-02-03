@@ -4,74 +4,104 @@
     <a class="navbar-brand" href="#">AJAX!</a>
 </nav>
 <div class="container p-4">
+    <div class="row justify-content-center">
+        <div class="col-6 text-center">
+            <p>
+                Select a name to only show that user, or select a birthdate range to show only characters born during that range!
+            </p>
+        </div>
+    </div>
     <form class="ajaxSearch form-inline">
+        {% csrf_token %}
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="namefield">Name: </label>
-            <input type="text" class="form-control mb-2 mx-sm-4" id="namefield" name="namefield" placeholder="Your Name!">
+            <!-- <label class="col-sm-2 col-form-label" for="firstname">First Name: </label> -->
+            <input type="text" class="form-control mb-2 mx-sm-4" id="firstname" name="firstname" placeholder="First Name">
         </div>
         <div class="form-group row">
-            <label class="col-sm-2 col-form-label" for="startdate">Start: </label>
-            <input type="date" class="form-control mb-2 mx-sm-4" id="startdate" name="startdate">
+            <!-- <label class="col-sm-2 col-form-label" for="lastname">Last Name: </label> -->
+            <input type="text" class="form-control mb-2 mx-sm-4" id="lastname" name="lastname" placeholder="Last Name">
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label ml-2" for="startdate">Start: </label>
+            <input type="date" class="form-control mb-2 mx-sm-2" id="startdate" name="startdate">
         </div>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label" for="enddate">End: </label>
-            <input type="date" class="form-control mb-2 mx-sm-4" id="enddate" name="enddate">
+            <input type="date" class="form-control mb-2 mx-sm-2" id="enddate" name="enddate">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
         </div>
     </form>
-    <div class="row justify-content-end">
-        <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">&laquo; First</a>
-                </li>
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                </li>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-            <li class="page-item active">
-                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-            </li>
-                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-            </li>
+    <div class="userDataDiv">
+        <div class="row justify-content-end">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; First</a>
+                    </li>
                 {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
-    <div class="row">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">ID Number</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Birthdate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in page_obj %}
-                <tr>
-                    <th scope="row">{{ user.pk }}</th>
-                    <td>{{ user.first_name }}</td>
-                    <td>{{ user.last_name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.birthdate }}</td>
-                </tr>
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                    {% endif %}
                 {% endfor %}
-            </tbody>
-        </table>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID Number</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Birthdate</th>
+                    </tr>
+                </thead>
+                <tbody class="userList">
+                    {% for user in page_obj %}
+                    <tr>
+                        <th scope="row">{{ user.pk }}</th>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.birthdate }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script>
-
+    // $( ".ajaxSearch" ).keydown(function( event ) {
+    //     if ( event.which == 13 ) {
+    //     event.preventDefault();
+    // }
+    $('form').submit(function (e) {
+        e.preventDefault()
+        $.ajax({
+            url: '{% url "updateList" %}',
+            method: 'post',
+            data: $(this).serialize(),
+            success: function(serverResponse) {
+            console.log('Data is being returned!')
+                $( '.userDataDiv' ).html(serverResponse)
+            }
+        })
+        $(this).trigger('reset')
+    })
 </script>
 {% endblock content %}
