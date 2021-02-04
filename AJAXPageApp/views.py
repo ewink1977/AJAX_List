@@ -15,7 +15,11 @@ def displayMainPage(request):
     return render(request, 'html/main.html', context)
 
 def updateUserList(request):
-    nameUpdate = User.objects.filter(first_name = request.POST['firstname'])
+    first = request.POST['firstname']
+    last = request.POST['lastname']
+    startDate = request.POST['startdate']
+    endDate = request.POST['enddate']
+    nameUpdate = User.objects.filter(first_name__icontains=first, last_name__icontains=last, birthdate__range=(startDate, endDate))
     paginator = Paginator(nameUpdate.order_by('id'), 10)
 
     page_number = request.GET.get('page')
